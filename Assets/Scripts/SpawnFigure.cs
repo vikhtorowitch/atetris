@@ -20,17 +20,21 @@ public class SpawnFigure {
 	public void RotateFigure() {
 
 		_buffer = new int[_figure.GetUpperBound(1)+1, _figure.GetUpperBound(0)+1];
-		for (int iy=0; iy<=_figure.GetUpperBound(0); iy++)
-			for (int ix=0; ix<=_figure.GetUpperBound(1); ix++) {
-			_buffer[ix, iy] = _figure[iy, ix];
+		int ti;
+		for (int iy=0; iy<=_figure.GetUpperBound(1); iy++)
+			for (int ix=0; ix<=_figure.GetUpperBound(0); ix++) {
+			_buffer[iy, _figure.GetUpperBound(0)-ix] = _figure[ix, iy];
+			ti = _figure.GetUpperBound(0)-ix;
+			//Debug.Log("iy: "+iy.ToString()+"ix: "+ti.ToString());
 			}
 		_figure = _buffer;
+		/*
 		Debug.Log(_figure.Rank.ToString());
 		Debug.Log(_figure.GetUpperBound(0).ToString());
 		Debug.Log(_figure.GetUpperBound(1).ToString());
 		Debug.Log(_buffer.Rank.ToString());
 		Debug.Log(_buffer.GetUpperBound(0).ToString());
 		Debug.Log(_buffer.GetUpperBound(1).ToString());
-
+		*/
 	}
 }
