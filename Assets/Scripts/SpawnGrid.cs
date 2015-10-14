@@ -9,9 +9,6 @@ public class SpawnGrid : MonoBehaviour {
 
 	private Canvas canv;
 
-	private int _x = 4;
-	private int _y = 4;
-
 	private int[,] _arr;
 
 	SpawnFigure figL;
@@ -61,13 +58,13 @@ public class SpawnGrid : MonoBehaviour {
 	
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.UpArrow))	figL.RotateFigure ();	//_y--;
-		if (Input.GetKeyDown (KeyCode.DownArrow))	_y++;
-		if (Input.GetKeyDown (KeyCode.LeftArrow)) _x--;
-		if (Input.GetKeyDown (KeyCode.RightArrow))	_x++;
+		if (Input.GetKeyDown (KeyCode.DownArrow))	figL.y++;
+		if (Input.GetKeyDown (KeyCode.LeftArrow)) figL.x--;
+		if (Input.GetKeyDown (KeyCode.RightArrow))	figL.x++;
 		CleArr ();
 		//_arr [_x, _y] = 1;
 
-		figL.DrawFigure(_arr, _x, _y);
+		figL.DrawFigure(_arr);
 
 		/*
 		for (int iy=0; iy<=_figL.GetUpperBound(0); iy++)
