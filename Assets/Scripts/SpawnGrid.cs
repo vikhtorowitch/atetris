@@ -13,32 +13,28 @@ public class SpawnGrid : MonoBehaviour {
 	private int[,] _arr;
 	private int[,] _fixed;
 
-	public float fallingSpeed = 1f;
+	public float defaultFallingSpeed = 1f;
+	public float dropSpeed = 0.01f;
 
-	SpawnFigure figL;
+	private float fallingSpeed;
+
+	private SpawnFigure activeFigure;
+	private SpawnFigure nextFigure;
+
+	private float timer = 0f;
 
 	void Start () {
+
+		fallingSpeed = defaultFallingSpeed;
+
 		_arr = new int[10,20];
 		_fixed = new int[10,20];
 
 		CleArr (_arr);
 		CleArr (_fixed);
 
-		figL = new SpawnFigure (6);
+		activeFigure = new SpawnFigure (6);
 
-		//Debug.Log(_figL.Rank.ToString());
-		//Debug.Log(_figL.GetUpperBound(0).ToString());
-		//Debug.Log(_figL.GetUpperBound(1).ToString());
-
-		/*
-		Vector3 vec;
-		for (int iy=1; iy<11; iy++)
-			for (int ix=1; ix<11; ix++) {
-				//vec.x = 
-				//Instantiate (grid_element);
-				GUI.Label(new Rect(ix, iy, 50, 50), "#");
-			} */
-		StartCoroutine(fallingFigures());
 	}
 
 	void CleArr(int[,] _clarr) {
@@ -70,41 +66,35 @@ public class SpawnGrid : MonoBehaviour {
 	}
 
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.UpArrow))	figL.RotateFigure ();	//_y--;
-		if (Input.GetKeyDown (KeyCode.DownArrow))	fallingSpeed = 0f;
-		if (Input.GetKeyDown (KeyCode.LeftArrow)) figL.x--;
-		if (Input.GetKeyDown (KeyCode.RightArrow))	figL.x++;
 
+		timer += Time.deltaTime;
+
+		if (Input.GetKeyDown (KeyCode.UpArrow))	activeFigure.RotateFigure (_fixed);	//_y--;
+		if (Input.GetKeyDown (KeyCode.DownArrow))	fallingSpeed = dropSpeed;
+		if (Input.GetKeyDown (KeyCode.LeftArrow)) activeFigure.x--;
+		if (Input.GetKeyDown (KeyCode.RightArrow))	activeFigure.x++;
+
+		if (timer >= fallingSpeed) {
+			activeFigure.y++;
+			timer = 0f;
+		}
 
 		CleArr (_arr);
 		//_arr [_x, _y] = 1;
 
 		CopyScreen (_fixed, _arr);
 
-		figL.DrawFigure(_arr, _fixed);
+		activeFigure.DrawFigure(_arr, _fixed);
 
-		if (figL.flagCollision) {
-			Debug.Log("collision");
+		if (activeFigure.flagCollision) {
+			//Debug.Log("collision");
 			CopyScreen (_arr, _fixed);
 			_arr = new int[10,20];
-			fallingSpeed = 1f;
-			figL = new SpawnFigure (6);
+			fallingSpeed = defaultFallingSpeed;
+			activeFigure = new SpawnFigure (6);
 		}
 
-		/*
-		for (int iy=0; iy<=_figL.GetUpperBound(0); iy++)
-			for (int ix=0; ix<=_figL.GetUpperBound(1); ix++) {
-				if (_figL[iy, ix] == 1) _arr[ix+_x, iy+_y] = 1;
-			}
-			*/
+
 	}
 
-	IEnumerator fallingFigures()
-	{
-		while(true)
-		{
-			if(figL != null) figL.y++;
-			yield return new WaitForSeconds(fallingSpeed);
-		}
-	}
 }

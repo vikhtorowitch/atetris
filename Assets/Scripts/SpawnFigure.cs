@@ -80,6 +80,7 @@ public class SpawnFigure {
 
 		}
 
+
 		for (int iy=0; iy<=_figure.GetUpperBound(1); iy++)
 			for (int ix=0; ix<=_figure.GetUpperBound(0); ix++) {
 				if ((_figure [ix, iy] == 1) && (_fixed [ix + x, iy + y] == 1)) {
@@ -90,6 +91,7 @@ public class SpawnFigure {
 				y = prev_y;
 			}
 			}
+
 		//if (!flagCollision)	
 		for (int iy=0; iy<=_figure.GetUpperBound(1); iy++)
 		for (int ix=0; ix<=_figure.GetUpperBound(0); ix++) {
@@ -105,7 +107,18 @@ public class SpawnFigure {
 
 	}
 
-	public void RotateFigure() {
+	private bool CheckOverspawn(int[,] _fig, int[,] _fix) {
+
+		for (int iy=0; iy<=_fig.GetUpperBound(1); iy++)
+			for (int ix=0; ix<=_fig.GetUpperBound(0); ix++) {
+				if ((_fig [ix, iy] == 1) && (_fix [ix + x, iy + y] == 1)) {
+					return true;
+				}
+			}
+		return false;
+	}
+
+	public void RotateFigure(int[,] _fixed) {
 
 		_buffer = new int[_figure.GetUpperBound(1)+1, _figure.GetUpperBound(0)+1];
 		for (int iy=0; iy<=_figure.GetUpperBound(1); iy++)
@@ -114,7 +127,7 @@ public class SpawnFigure {
 			//ti = _figure.GetUpperBound(0)-ix;
 			//Debug.Log("iy: "+iy.ToString()+"ix: "+ti.ToString());
 			}
-		_figure = _buffer;
+		if (!CheckOverspawn(_buffer, _fixed))	_figure = _buffer;
 		/*
 		Debug.Log(_figure.Rank.ToString());
 		Debug.Log(_figure.GetUpperBound(0).ToString());
