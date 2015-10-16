@@ -44,16 +44,32 @@ public class SpawnGrid : MonoBehaviour {
 	}
 
 	void OnGUI () {
+		/*
+		float fl = (float)(Screen.width * 0.20);
+		int cellWidth = Mathf.RoundToInt (fl);
+		*/
+		int cellWidth = 30;
+		int cellGrid = 25;
+
 		for (int iy=1; iy<21; iy++)
 		for (int ix=1; ix<11; ix++) {
 
 			int cell = _arr[ix-1, iy-1];
 
-			if (cell == 0) GUI.Label(new Rect(ix*25, iy*25, 30, 30), texWhite);
-			else if (cell == 1) GUI.Label(new Rect(ix*25, iy*25, 30, 30), texBlue);
-			else if (cell == 2) GUI.Label(new Rect(ix*25, iy*25, 30, 30), texGreen);
+			if (cell == 0) GUI.Label(new Rect(ix*cellGrid, iy*cellGrid, cellWidth, cellWidth), texWhite);
+			else if (cell == 1) GUI.Label(new Rect(ix*cellGrid, iy*cellGrid, cellWidth, cellWidth), texBlue);
+			else if (cell == 2) GUI.Label(new Rect(ix*cellGrid, iy*cellGrid, cellWidth, cellWidth), texGreen);
 		}
 		//Debug.Log("draw");
+		if (activeFigure.flagNoMoreSpace) {
+			Debug.Log("nomorespace");
+			//Time.timeScale = 0;
+		GUI.Label(new Rect(Screen.width / 2 - Screen.width / 24, Screen.height / 3, Screen.width / 12, Screen.width / 24), "Game Over");
+		if (GUI.Button(new Rect(Screen.width / 2 - Screen.width / 24, Screen.height / 2, Screen.width / 12, Screen.width / 24), "Restart"))
+			{
+				Application.LoadLevel(Application.loadedLevel);
+			}
+		}
 
 	}
 
@@ -79,21 +95,24 @@ public class SpawnGrid : MonoBehaviour {
 			timer = 0f;
 		}
 
-		CleArr (_arr);
-		//_arr [_x, _y] = 1;
+		if (!activeFigure.flagNoMoreSpace) {
 
-		CopyScreen (_fixed, _arr);
+			CleArr (_arr);
+			//_arr [_x, _y] = 1;
 
-		activeFigure.DrawFigure(_arr, _fixed);
+			CopyScreen (_fixed, _arr);
 
-		if (activeFigure.flagCollision) {
-			//Debug.Log("collision");
-			CopyScreen (_arr, _fixed);
-			_arr = new int[10,20];
-			fallingSpeed = defaultFallingSpeed;
-			activeFigure = new SpawnFigure (6);
+			activeFigure.DrawFigure (_arr, _fixed);
+
+
+			if (activeFigure.flagCollision) {
+				//Debug.Log("collision");
+				CopyScreen (_arr, _fixed);
+				_arr = new int[10, 20];
+				fallingSpeed = defaultFallingSpeed;
+				activeFigure = new SpawnFigure (6);
+			}
 		}
-
 
 	}
 
